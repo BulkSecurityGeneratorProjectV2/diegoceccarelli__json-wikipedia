@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.specific.SpecificDatumReader;
@@ -35,7 +36,7 @@ public class WikipediaArticleReaderTest {
   public void testParsing()
       throws UnsupportedEncodingException, FileNotFoundException, IOException, SAXException {
     File input = new File("src/test/resources/en/mercedes.xml");
-    final File file = File.createTempFile("jsonwikipedia-mercedes", ".json.gz");
+    final File file = Files.createTempFile("jsonwikipedia-mercedes", ".json.gz").toFile();
     WikipediaArticleReader wap = new WikipediaArticleReader(input, file, "en");
     wap.start();
     String json = IOUtils.getFileAsUTF8String(file.getAbsolutePath());
@@ -47,7 +48,7 @@ public class WikipediaArticleReaderTest {
   @Test
   public void testAvroParsing() throws IOException, SAXException {
     File input = new File("src/test/resources/en/mercedes.xml");
-    final File output = File.createTempFile("jsonwikipedia-mercedes", ".avro");
+    final File output = Files.createTempFile("jsonwikipedia-mercedes", ".avro").toFile();
     output.deleteOnExit();
 
     WikipediaArticleReader wap = new WikipediaArticleReader(input, output, "en");
@@ -67,7 +68,7 @@ public class WikipediaArticleReaderTest {
   public void testAvroAndJsonProduceSameObject() throws IOException, SAXException {
     // get json article
     File input = new File("src/test/resources/en/mercedes.xml");
-    final File jsonOuput = File.createTempFile("jsonwikipedia-mercedes", ".json.gz");
+    final File jsonOuput = Files.createTempFile("jsonwikipedia-mercedes", ".json.gz").toFile();
     jsonOuput.deleteOnExit();
     WikipediaArticleReader wap = new WikipediaArticleReader(input, jsonOuput, "en");
     wap.start();
@@ -75,7 +76,7 @@ public class WikipediaArticleReaderTest {
     Article jsonArticle = ArticleHelper.fromJson(json);
     // get avro article
 
-    final File avroOutput = File.createTempFile("jsonwikipedia-mercedes", ".avro");
+    final File avroOutput = Files.createTempFile("jsonwikipedia-mercedes", ".avro").toFile();
     avroOutput.deleteOnExit();
 
     WikipediaArticleReader avroParser = new WikipediaArticleReader(input, avroOutput, "en");
